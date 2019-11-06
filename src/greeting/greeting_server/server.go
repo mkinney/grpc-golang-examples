@@ -1,15 +1,27 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
 
-	"github.com/mkinney/greet-service-go/src/greeting/greetingpb"
+	"github.com/mkinney/grpc-golang-examples/src/greeting/greetingpb"
 	"google.golang.org/grpc"
 )
 
 type server struct{}
+
+func (*server) Greeting(ctx context.Context, req *greetingpb.GreetingRequest) (*greetingpb.GreetingResponse, error) {
+	fmt.Printf("Greeting function was invoked with: %v:\n", req)
+	firstName := req.GetGreeting().GetFirstName()
+	result := "Hello " + firstName
+	res := &greetingpb.GreetingResponse{
+		Result: result,
+	}
+	return res, nil
+}
+
 
 func main() {
 	fmt.Println("Hello")

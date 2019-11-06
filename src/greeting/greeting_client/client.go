@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"context"
 	"log"
 
-	"github.com/mkinney/greet-service-go/src/greeting/greetingpb"
+	"github.com/mkinney/grpc-golang-examples/src/greeting/greetingpb"
 	"google.golang.org/grpc"
 )
 
@@ -22,6 +23,24 @@ func main() {
 	defer cc.Close()
 
 	c := greetingpb.NewGreetingServiceClient(cc)
-	fmt.Printf("created client: %f", c)
+	//fmt.Printf("created client: %f", c)
+
+	doUnary(c)
+}
+
+func doUnary(c greetingpb.GreetingServiceClient) {
+	fmt.Println("Starting to do Unary RPC")
+	req := &greetingpb.GreetingRequest{
+		Greeting: &greetingpb.GreetingMessage{
+			FirstName: "Mike",
+			LastName: "Kinney",
+		},
+	}
+
+	res, err := c.Greeting(context.Background(), req)
+	if err != nil {
+		log.Fatalf("error while calling Greeting RPC: %v:", err)
+	}
+	log.Printf("response from Greeting: %v", res.Result)
 
 }
