@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package example.calc;
+
+option go_package = "calcpb";
+
+message Calc {
+  int64 first_value = 1;
+  int64 second_value = 2;
+}
+
+message CalcRequest {
+  Calc calc = 1;
+}
+
+message CalcResponse {
+  string result = 1;
+}
+
+service CalcService {
+  // unary
+  rpc Calc(CalcRequest) returns (CalcResponse) {};
+}
